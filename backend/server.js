@@ -19,7 +19,8 @@ const maxHeap = require('./utils/MaxHeap'); // Dynamic Sorting Data Structure In
 const app = express();
 
 // --- Middleware ---
-app.use(cors()); // Critical: Allows your React frontend to communicate with this API
+
+app.use(cors({ origin: '*' })); // Critical: Allows your React frontend to communicate with this API
 app.use(express.json());
 
 // --- Database Connection ---

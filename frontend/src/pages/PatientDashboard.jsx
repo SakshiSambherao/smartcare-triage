@@ -29,6 +29,11 @@ const PatientDashboard = () => {
   const [showProfileDrawer, setShowProfileDrawer] = useState(false);
   const [pinging, setPinging] = useState(false);
 
+  // ==========================================
+  // DEPLOYMENT UPDATE: Dynamic API URL Routing
+  // ==========================================
+  const API_URL = import.meta.env.VITE_API_URL;
+
   // INITIALIZE DIRECTLY FROM ACTIVE SESSION METADATA
   const [user, setUser] = useState(() => {
     try {
@@ -52,7 +57,7 @@ const PatientDashboard = () => {
   const fetchEmergencyQueue = async () => {
     setQueueLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/appointments/queue');
+      const res = await axios.get(`${API_URL}/api/appointments/queue`);
       setLiveQueue(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       setLiveQueue([]);
@@ -66,7 +71,7 @@ const PatientDashboard = () => {
     if (!user) return;
     setHistoryLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/appointments/history');
+      const res = await axios.get(`${API_URL}/api/appointments/history`);
       const dataArray = Array.isArray(res.data) ? res.data : [];
       const userHistory = dataArray.filter(record => record && record.patientEmail === user.email);
       setHistoryRecords(userHistory);
@@ -135,7 +140,7 @@ const PatientDashboard = () => {
     setPinging(true);
     const startTime = Date.now();
     try {
-      await axios.get('http://localhost:5000/api/appointments/queue');
+      await axios.get(`${API_URL}/api/appointments/queue`);
       const latency = Date.now() - startTime;
       showToast("Hospital Server Online", "success", `Handshake verified successfully. Delay: ${latency}ms.`);
     } catch (err) {
@@ -172,7 +177,7 @@ const PatientDashboard = () => {
         }
       };
 
-      const res = await axios.post('http://localhost:5000/api/appointments/book', payload);
+      const res = await axios.post(`${API_URL}/api/appointments/book`, payload);
       const returnedPriority = Number(res?.data?.priorityScore || 3);
 
       if (returnedPriority >= 9) {

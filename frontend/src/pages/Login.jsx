@@ -11,8 +11,15 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            // Dispatch login requests to backend service port
-            const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+            // ==========================================
+            // DEPLOYMENT UPDATE: Dynamic API URL Routing
+            // ==========================================
+            // This pulls 'http://localhost:5000' from your local .env file during testing,
+            // and pulls your live Render URL from Vercel's dashboard during production.
+            const API_URL = import.meta.env.VITE_API_URL;
+
+            // Dispatch login requests to backend service via dynamic URL
+            const res = await axios.post(`${API_URL}/api/auth/login`, { email, password });
 
             if (res.data && res.data.token) {
                 // Wipe existing stale sessions instantly before writing new items

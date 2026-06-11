@@ -18,16 +18,21 @@ const DoctorDashboard = () => {
     const [heartRate, setHeartRate] = useState('');
     const [bloodPressure, setBloodPressure] = useState('');
 
+    // ==========================================
+    // DEPLOYMENT UPDATE: Dynamic API URL Routing
+    // ==========================================
+    const API_URL = import.meta.env.VITE_API_URL;
+
     // 1. FRESH UNIFIED DATA FETCH LAYER
     const fetchHospitalData = async () => {
         try {
-            const breakRes = await axios.get('http://localhost:5000/api/appointments/break-status');
+            const breakRes = await axios.get(`${API_URL}/api/appointments/break-status`);
             setOnBreak(breakRes.data.isDoctorOnBreak);
 
-            const qRes = await axios.get('http://localhost:5000/api/appointments/queue');
+            const qRes = await axios.get(`${API_URL}/api/appointments/queue`);
             setQueue(qRes.data || []);
 
-            const aRes = await axios.get('http://localhost:5000/api/appointments/analytics');
+            const aRes = await axios.get(`${API_URL}/api/appointments/analytics`);
             setAnalytics(aRes.data);
         } catch (err) {
             // Silenced for production
@@ -44,7 +49,7 @@ const DoctorDashboard = () => {
     const handleToggleBreak = async () => {
         const nextBreakState = !onBreak;
         try {
-            await axios.post('http://localhost:5000/api/appointments/toggle-break', { onBreak: nextBreakState });
+            await axios.post(`${API_URL}/api/appointments/toggle-break`, { onBreak: nextBreakState });
             setOnBreak(nextBreakState);
         } catch (err) {
             alert("Network delay tracking state change. Please try again.");
@@ -95,7 +100,7 @@ const DoctorDashboard = () => {
                 }
             };
 
-            await axios.post('http://localhost:5000/api/appointments/treat', payload);
+            await axios.post(`${API_URL}/api/appointments/treat`, payload);
             
             setShowTreatModal(false);
             setSelectedAppointmentId(null);

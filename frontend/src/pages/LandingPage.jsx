@@ -16,6 +16,11 @@ const LandingPage = () => {
   const [submitStatus, setSubmitStatus] = useState(null);
   const [expandedFaqId, setExpandedFaqId] = useState(null);
 
+  // ==========================================
+  // DEPLOYMENT UPDATE: Dynamic API URL Routing
+  // ==========================================
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const toggleFaq = (id) => setExpandedFaqId(expandedFaqId === id ? null : id);
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -24,7 +29,7 @@ const LandingPage = () => {
     setIsSubmitting(true);
     setSubmitStatus(null);
     try {
-      await axios.post('http://localhost:5000/api/contact', formData);
+      await axios.post(`${API_URL}/api/contact`, formData);
       setSubmitStatus('success');
       setFormData({ name: '', email: '', phone: '', department: 'General Administration', message: '' });
       setTimeout(() => setSubmitStatus(null), 5000);
