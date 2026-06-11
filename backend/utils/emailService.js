@@ -5,11 +5,13 @@ require('dotenv').config();
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465,
-    secure: true, // Forces SSL/TLS encryption through the firewall
+    secure: true,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
-    }
+    },
+    // 👇 THIS IS THE FIX YOU NEED 👇
+    family: 4
 });
 
 /**
@@ -32,7 +34,7 @@ const sendEmail = async (to, subject, html) => {
         return info;
     } catch (error) {
         console.error('❌ Email Failed: ', error);
-        throw error; // Added this so your controller knows if the email fails!
+        throw error;
     }
 };
 
