@@ -1,9 +1,11 @@
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-// Setup the Transporter (The "Post Office")
+// Setup the Transporter (Explicitly configured for Render/Cloud deployment)
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // Forces SSL/TLS encryption through the firewall
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
@@ -30,6 +32,7 @@ const sendEmail = async (to, subject, html) => {
         return info;
     } catch (error) {
         console.error('❌ Email Failed: ', error);
+        throw error; // Added this so your controller knows if the email fails!
     }
 };
 
